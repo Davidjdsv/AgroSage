@@ -1,0 +1,7 @@
+{
+  "name": "front-end-agro-sage",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
