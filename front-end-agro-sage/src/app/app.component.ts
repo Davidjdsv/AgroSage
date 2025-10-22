@@ -35,6 +35,7 @@ import {
   homeSharp,
   chatbubbleEllipsesOutline,
   chatbubbleEllipsesSharp,
+  leafOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -62,6 +63,7 @@ import {
 export class AppComponent {
   public appPages = [
     { title: 'Chat con GaIA 🍃', url: '/chat-agent-weather', icon: 'chatbubble-ellipses' },
+    { title: 'Inicio', url: '/login', icon: 'home' },
   ];
   constructor() {
     addIcons({
@@ -83,6 +85,7 @@ export class AppComponent {
       homeSharp,
       chatbubbleEllipsesOutline,
       chatbubbleEllipsesSharp,
+      leafOutline
     });
   }
 }

@@ -7,8 +7,13 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+  },
+  {
     path: 'chat-agent-weather',
     loadComponent: () => import('./pages/chat-agent-weather/chat-agent-weather.page').then( m => m.ChatAgentWeatherPage)
   },
+
 
 ];
