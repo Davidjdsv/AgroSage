@@ -4,22 +4,34 @@ import CostosInsumoParcela from "../models/CostosInsumoParcela.js";
 import RegistroClima from "../models/RegistroClima.js";
 import PreciosMercado from "../models/PreciosMercado.js";
 import Recomendacion from "../models/Recomendacion.js";
-import {TareaPlan} from "../models/TareaPlan.js";
+import { TareaPlan } from "../models/TareaPlan.js";
 
-import { Agricultores, Parcelas, SuelosCatalogos, InsumosCatalogos, PlanSiembras } from "../models/index.js";
+// Se asume que estos son los nombres correctos de las clases modelo:
+import {
+  Parcelas,
+  SuelosCatalogos, // Corregido: Usar SuelosCatalogos en lugar de Suelo
+  InsumosCatalogos,
+  PlanSiembras, // Corregido: Usar PlanSiembras en lugar de PlanSiembra
+} from "../models/index.js";
+
+// Configuración de la API de Gemini (modelo y endpoint)
+const GEMINI_API_MODEL = "gemini-2.5-flash-preview-09-2025";
+const GEMINI_API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 export const generatePlan = async (req, res) => {
   const { id_agricultor } = req.user;
 
   try {
-    // Obtener datos relevantes del agricultor
+    // 1. Obtener datos relevantes del agricultor (Corrección de nombres de modelos)
     const parcelas = await Parcelas.findAll({
       where: { id_agricultor },
       include: [
-        { model: Suelo, attributes: ["tipo_suelo", "ph_referencia", "descripcion"] },
+        // Usar SuelosCatalogos en lugar de Suelo (asumido por imports)
+        { model: SuelosCatalogos, attributes: ["tipo_suelo", "ph_referencia", "descripcion"] },
         {
-          model: PlanSiembra,
-          include: [{ model: InsumosCatalogo, attributes: ["nombre_InsumosCatalogo", "descripcion"] }],
+          // Usar PlanSiembras en lugar de PlanSiembra (asumido por imports)
+          model: PlanSiembras,
+          include: [{ model: InsumosCatalogos, attributes: ["nombre_InsumosCatalogo", "descripcion"] }],
         },
         {
           model: RegistroClima,
@@ -33,86 +45,131 @@ export const generatePlan = async (req, res) => {
     if (!parcelas.length)
       return res.status(404).json({ error: "No hay parcelas registradas para este agricultor." });
 
-    // Obtener datos económicos
+    // Obtener IDs de parcelas para consultas económicas
+    const parcelaIds = parcelas.map((p) => p.id_parcela);
+
+    // Obtener datos económicos y recomendaciones
     const [precios, costos, recomendaciones] = await Promise.all([
       PreciosMercado.findAll({ limit: 5 }),
-      CostosInsumoParcela.findAll({ where: { id_parcela: parcelas.map(p => p.id_parcela) } }),
-      Recomendacion.findAll({ where: { id_parcela: parcelas.map(p => p.id_parcela) } }),
+      CostosInsumoParcela.findAll({ where: { id_parcela: parcelaIds } }),
+      Recomendacion.findAll({ where: { id_parcela: parcelaIds } }),
     ]);
 
-    // Crear contexto para el LLM (sin datos personales)
-    const contexto = `
-Eres AgroSage, un asistente agrícola experto.
-Tu tarea es generar un plan agrícola detallado y personalizado basado en los siguientes datos.
+    // 2. Definir instrucciones y query para el LLM
 
-No reveles información de otros agricultores ni datos personales.
-El plan debe incluir:
-1. Preparación del suelo
-2. Qué sembrar y cuándo
-3. Fertilización y riego
-4. Riesgos climáticos y cómo mitigarlos
-5. Cosecha
-6. Alternativa de InsumosCatalogo con comparación de costos y beneficios.
+    // Instrucción del sistema (define la personalidad y el formato de salida)
+    const systemPrompt = `Eres AgroSage, un asistente agrícola experto de clase mundial.
+Tu tarea es generar un plan agrícola detallado y personalizado en formato JSON, basado en los datos proporcionados.
+El plan debe ser una respuesta única, concisa y basada en el análisis de la información y en datos actuales del mercado y el clima (gracias a la búsqueda de Google).
 
-Datos agrícolas:
-${JSON.stringify({ parcelas, precios, costos, recomendaciones }, null, 2)}
+El plan debe incluir las siguientes secciones clave:
+1. Preparación del suelo (preparacion)
+2. Qué sembrar y cuándo (siembra)
+3. Fertilización y riego (fertilizacion)
+4. Riesgos climáticos y cómo mitigarlos (riesgos)
+5. Cosecha (cosecha)
+6. Alternativa de Insumos (alternativa)
 
-Formato de salida (JSON):
+No incluyas explicaciones, encabezados, sub-encabezados o texto fuera de la estructura JSON. Usa el idioma español.
+
+Estructura JSON obligatoria:
 {
-  "preparacion": "...",
-  "siembra": "...",
-  "fertilizacion": "...",
-  "riesgos": "...",
-  "cosecha": "...",
+  "preparacion": "Resumen de las tareas de preparación del suelo.",
+  "siembra": "Recomendación de siembra, incluyendo fechas y cultivos.",
+  "fertilizacion": "Estrategia de fertilización y riego específica para el tipo de suelo y clima.",
+  "riesgos": "Identificación de riesgos climáticos y sugerencias de mitigación.",
+  "cosecha": "Tiempo estimado y métodos recomendados para la cosecha.",
   "alternativa": {
-     "InsumosCatalogo": "...",
-     "ahorro_estimado_pct": "...",
-     "incremento_ingreso_pct": "..."
+    "insumo_alternativo": "Nombre del Insumo Catalogo alternativo y su beneficio principal.",
+    "ahorro_estimado_pct": "Porcentaje de ahorro estimado en costos (ej: 15%).",
+    "incremento_ingreso_pct": "Porcentaje de incremento estimado en ingresos/rendimiento (ej: 10%)."
   }
 }
 `;
 
-    // Llamada al modelo Gemini
-    const response = await fetch("https://api.gemini.ai/v1/models/text-bison-001:generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.GEMINI_API_KEY}`, // tu API key
-      },
-      body: JSON.stringify({
-        prompt: contexto,
+    // Query del usuario (los datos a analizar)
+    const userQuery = `Analiza los siguientes datos agrícolas para generar el plan. No reveles información de otros agricultores ni datos personales.
+
+Datos:
+${JSON.stringify({ parcelas, precios, costos, recomendaciones }, null, 2)}
+`;
+
+    // 3. Llamada al modelo Gemini con el nuevo formato y grounding
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    const apiUrl = `${GEMINI_API_BASE_URL}/${GEMINI_API_MODEL}:generateContent?key=${apiKey}`;
+
+    const payload = {
+      contents: [{ parts: [{ text: userQuery }] }],
+      // Establecer la personalidad y las reglas de formato
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      // Habilitar Google Search para grounding de información en tiempo real
+      tools: [{ google_search: {} }],
+      // Configuración para forzar la respuesta JSON
+      generationConfig: {
         temperature: 0.4,
-        max_output_tokens: 1000,
-      }),
+        responseMimeType: "application/json",
+      },
+    };
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error Gemini: ${response.status} ${errorText}`);
+      throw new Error(`Error en la API de Gemini: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    const output = data?.candidates?.[0]?.content || "{}";
-    const plan = JSON.parse(output);
+    // Extraer el texto de la respuesta JSON
+    const output = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
-    // Guardar tareas en la tabla tareas_plan
-    for (const [etapa, detalle] of Object.entries(plan)) {
-      if (["preparacion", "siembra", "fertilizacion", "riesgos", "cosecha"].includes(etapa)) {
-        await TareaPlan.create({
-          id_tarea: crypto.randomUUID(),
-          id_plan: parcelas[0].PlanSiembra?.id_plan,
-          etapa,
-          fecha_inicio: new Date(),
-          fecha_fin: new Date(),
-          responsable: "Agricultor",
-          completada: 0,
-        });
-      }
+    let plan;
+    try {
+      plan = JSON.parse(output);
+    } catch (e) {
+      console.error("Error al parsear el JSON del LLM:", e, "Output recibido:", output);
+      throw new Error("El modelo generó un formato JSON inválido.");
+    }
+
+    // 4. Guardar tareas en la tabla tareas_plan
+    // Se asume que PlanSiembras es una relación HasMany y tomamos el primer plan asociado a la primera parcela.
+    const planSiembraAssociation = parcelas[0].PlanSiembras;
+    const idPlan = Array.isArray(planSiembraAssociation) && planSiembraAssociation.length > 0
+        ? planSiembraAssociation[0].id_plan
+        : null;
+
+    if (idPlan) {
+        // Guardar las etapas del plan como tareas
+        for (const [etapa, detalle] of Object.entries(plan)) {
+            // detalle puede ser un objeto (para 'alternativa') o una cadena.
+            const detalleString = typeof detalle === 'object' ? JSON.stringify(detalle) : detalle;
+
+            if (["preparacion", "siembra", "fertilizacion", "riesgos", "cosecha"].includes(etapa)) {
+                await TareaPlan.create({
+                    id_tarea: crypto.randomUUID(),
+                    id_plan: idPlan,
+                    etapa,
+                    // Se usan new Date() como en el código original.
+                    fecha_inicio: new Date(),
+                    fecha_fin: new Date(),
+                    responsable: "Agricultor",
+                    completada: 0,
+                    descripcion: detalleString // Guardar el detalle como descripción
+                });
+            }
+        }
+    } else {
+        console.warn("No se encontró un ID de PlanSiembra válido para asociar las tareas.");
     }
 
     return res.json({ plan });
   } catch (error) {
     console.error("Error generando plan:", error);
+    // Incluir detalles del error para una mejor depuración
     return res.status(500).json({ error: "Error interno", details: error.message });
   }
 };
