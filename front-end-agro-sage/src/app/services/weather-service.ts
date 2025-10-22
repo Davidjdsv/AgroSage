@@ -4,6 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 // Interfaz para tipar la respuesta de la API
 interface WeatherResponse {
@@ -29,8 +30,22 @@ export class WeatherService {
   
   // URL base de la API de Open-Meteo
   private apiUrl = 'https://api.open-meteo.com/v1/forecast';
+  private geocodeUrl = 'https://geocoding-api.open-meteo.com/v1/search';
 
   constructor(private http: HttpClient) {}
+
+  /** Busca ciudad/región y devuelve lat/lon (primer resultado) */
+  searchCity(name: string): Observable<{ name: string; lat: number; lon: number; label: string } | null> {
+    const params = { name, count: '1', language: 'es', format: 'json' };
+    return this.http.get<GeocodingAPIResponse>(this.geocodeUrl, { params }).pipe(
+      map((resp) => {
+        const r = resp?.results?.[0];
+        if (!r) return null;
+        const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+        return { name: r.name, lat: r.latitude, lon: r.longitude, label };
+      })
+    );
+  }
 
   /**
    * Obtiene el clima actual y pronóstico
@@ -135,4 +150,14 @@ export class WeatherService {
     // Si alguna hora tiene más de 50% de probabilidad, devuelve true
     return nextHours.some(prob => prob > 50);
   }
+}
+
+interface GeocodingAPIResponse {
+  results?: Array<{
+    name: string;
+    latitude: number;
+    longitude: number;
+    country?: string;
+    admin1?: string;
+  }>;
 }
