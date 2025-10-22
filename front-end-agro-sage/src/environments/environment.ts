@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  urlLocal: "http://localhost:3306",
+  urlLocal: "http://172.18.0.148:8080"
 };
-//urlBack: "http://172.18.0.148:8080"
 
+// urlLocal: "http://localhost:3306",
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

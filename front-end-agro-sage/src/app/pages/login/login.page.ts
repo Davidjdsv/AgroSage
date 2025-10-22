@@ -57,17 +57,11 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  onLogin() {
+  onLogin(documento: string, clave: string) {
     if (!this.documento || !this.clave) {
       console.warn('Documento y contraseña son requeridos');
       return;
     }
-    this.backService.login(this.documento, this.clave).subscribe((ok) => {
-      this.backService.isLoggedIn = ok;
-      if (ok) {
-        this.router.navigateByUrl('/chat-agent-weather');
-      }
-      console.log('Login válido?', ok);
-    });
+    this.backService.login(documento, clave).subscribe({});
   }
 }
