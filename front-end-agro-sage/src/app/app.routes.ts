@@ -13,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'chat-agent-weather',
-    canActivate: [loginGuard],
+    // canActivate: [loginGuard],
     loadComponent: () => import('./pages/chat-agent-weather/chat-agent-weather.page').then((m) => m.ChatAgentWeatherPage),
   },
 ];

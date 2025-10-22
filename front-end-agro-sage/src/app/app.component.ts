@@ -37,7 +37,8 @@ import {
   chatbubbleEllipsesSharp,
   leafOutline,
   lockClosedOutline,
-  cardOutline
+  cardOutline,
+  personCircle
 } from 'ionicons/icons';
 
 @Component({
@@ -89,7 +90,8 @@ export class AppComponent {
       chatbubbleEllipsesSharp,
       leafOutline,
       lockClosedOutline,
-      cardOutline
+      cardOutline,
+      personCircle
     });
   }
 }
