@@ -1,4 +1,4 @@
-import { Agricultores } from '../models/agricultores.js';
+import { Agricultor } from '../models/Agricultor.js';
 import { generarJWT } from '../middlewares/token.js';
 import bcrypt from 'bcryptjs';
 

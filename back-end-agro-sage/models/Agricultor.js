@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-export const Agricultores = sequelize.define(
-  "Agricultores",
+export const Agricultor = sequelize.define(
+  "Agricultor",
   {
     id_agricultor: {
       type: DataTypes.INTEGER,

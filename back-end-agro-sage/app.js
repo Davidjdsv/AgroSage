@@ -1,27 +1,48 @@
-import express from "express"; // Importar el framework Express para crear el servidor
-import dotenv from "dotenv"; // Importar dotenv para manejar variables de entorno desde el archivo .env
+import express from "express";
+import dotenv from "dotenv";
 import cors from "cors";
-import sequelize from './config/db.js';
+import sequelize from "./config/db.js";
+import RouterAgricultores from "./routes/agricultores.js";
+import RouterPlanes from "./routes/plan.routes.js"; // el router de generate-plan
 
-// Importar las rutas definidas para diferentes entidades
-import RouterAgricolas from './routes/agricultores.js'
+dotenv.config();
 
-dotenv.config(); // Cargar las variables de entorno del archivo .env a process.env
-sequelize()
+async function connectDB() {
+    try {
+        // Authenticate the connection
+        await sequelize.authenticate(); 
+        console.log('✅ Conexión a la base de datos establecida correctamente.');
+        
+        // Optional: Synchronize models (usually done only in dev environments)
+        // await sequelize.sync({ alter: true }); 
+    } catch (error) {
+        console.error('❌ Error al conectar o autenticar la base de datos:', error);
+    }
+}
 
-const app = express(); // Crear la instancia de la aplicación Express
-app.use(express.json()); // Middleware: Permite que Express entienda datos en formato JSON en las peticiones
-app.use(cors()); // Middleware: Habilita CORS para permitir peticiones desde frontends en otros dominios
-app.use(express.static(`public`)); //sirve para decirle a Express que sirva archivos estáticos desde la carpeta public.
+connectDB();
 
+const app = express();
 
-// Configurar las rutas de la API con sus respectivos endpoints
-app.use('/AgroSage/Agricultores', RouterAgricolas);
-//app.use('/AgroSage/', );
-//app.use('/AgroSage/',);
-//app.use('/AgroSage/', );
+// Middlewares
+app.use(express.json());
+app.use(cors());
+app.use(express.static("public"));
 
-// Iniciar el servidor y hacer que escuche en el puerto especificado
-app.listen(process.env.HOST, () => {
-  console.log(`✅ Servidor corriendo en ${process.env.HOST}`);
+// Rutas
+// Rutas de registro, login y perfil
+app.use("/AgroSage/Agricultores", RouterAgricultores);
+
+// Rutas del plan agrícola
+app.use("/AgroSage/Plan", RouterPlanes);
+
+// Ruta de prueba
+app.get("/AgroSage/ping", (req, res) => {
+  res.json({ message: "Servidor AgroSage activo ✅" });
+});
+
+// Puerto
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });

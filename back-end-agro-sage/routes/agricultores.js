@@ -1,6 +1,6 @@
 // routes/agricultores.routes.js
 import { Router } from 'express';
-import { createAgricultor, loginAgricultor } from '../controllers/agricultores.controller.js';
+import { createAgricultor, loginAgricultor } from '../controllers/agricultoresController.js';
 import { validarJWT } from '../middlewares/token.js';
 
 const router = Router();
