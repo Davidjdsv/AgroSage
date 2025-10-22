@@ -1,24 +1,48 @@
 import Sequelize from "sequelize";
 import sequelize from "../config/db.js";
-import Agricultores from "./Agricultor.js";
-import parcelas from "./Parcela.js";
-import suelos_catalogo from "./SuelosCatalogo.js";
-import insumos_catalogo from "./InsumosCatalogo.js";
-import planes_siembra from "./PlanSiembra.js";
 
-const Agricultores = Agricultores(sequelize, Sequelize.DataTypes);
-const Parcela = parcelas(sequelize, Sequelize.DataTypes);
-const SuelosCatalogo = suelos_catalogo(sequelize, Sequelize.DataTypes);
-const InsumosCatalogo = insumos_catalogo(sequelize, Sequelize.DataTypes);
-const PlanSiembra = planes_siembra(sequelize, Sequelize.DataTypes);
+// --- Imports ---
 
-// Relaciones
-Agricultores.hasMany(Parcela, { foreignKey: "id_agricultor" });
-Parcela.belongsTo(Agricultores, { foreignKey: "id_agricultor" });
+// El modelo Agricultor sigue como exportación nombrada (clase definida directamente).
+import { Agricultor } from "./Agricultor.js"; 
 
-Parcela.belongsTo(InsumosCatalogo, { foreignKey: "id_suelo" });
-Parcela.hasMany(PlanSiembra, { foreignKey: "id_parcela" });
+// Corregido: TareaPlan ahora se importa como exportación nombrada (clase definida directamente)
+// y se quita el alias 'Definition' ya que no es una función.
+import { TareaPlan } from "./TareaPlan.js";
 
-PlanSiembra.belongsTo(Cultivo, { foreignKey: "id_cultivo" });
+// Asumiendo que el resto de los modelos usan exportación por defecto (función de definición).
+import ParcelaDefinition from "./Parcela.js";
+import SuelosCatalogoDefinition from "./SuelosCatalogo.js";
+import InsumosCatalogoDefinition from "./InsumosCatalogo.js";
+import PlanSiembraDefinition from "./PlanSiembra.js";
 
-export { Agricultores, Parcela, SuelosCatalogo, InsumosCatalogo, PlanSiembra };
+// --- Inicialización ---
+
+// Agricultor ya es la clase definida
+const Agricultores = Agricultor; 
+
+// TareaPlan ahora es la clase definida directamente
+const TareasPlan = TareaPlan; 
+
+// Inicializamos los modelos que sí usan funciones de definición
+const Parcelas = ParcelaDefinition(sequelize, Sequelize.DataTypes);
+const SuelosCatalogos = SuelosCatalogoDefinition(sequelize, Sequelize.DataTypes);
+const InsumosCatalogos = InsumosCatalogoDefinition(sequelize, Sequelize.DataTypes);
+const PlanSiembras = PlanSiembraDefinition(sequelize, Sequelize.DataTypes);
+
+
+// --- Asociaciones (Relaciones) ---
+
+// Relaciones existentes
+Agricultores.hasMany(Parcelas, { foreignKey: "id_agricultor" });
+Parcelas.belongsTo(Agricultores, { foreignKey: "id_agricultor" });
+
+// Asociaciones para TareasPlan y PlanSiembras (ahora ambas variables son clases de modelo válidas)
+TareasPlan.belongsTo(PlanSiembras, { foreignKey: "id_plan_siembra" }); 
+PlanSiembras.hasMany(TareasPlan, { foreignKey: "id_plan_siembra" }); 
+
+
+// --- Exports ---
+
+// Exporta todos los modelos (incluyendo los nuevos)
+export { Agricultores, Parcelas, SuelosCatalogos, InsumosCatalogos, PlanSiembras, TareasPlan };

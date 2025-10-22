@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../db/conexion.js';
-import PlanSiembra, { hasMany } from './PlanSiembra';
+import sequelize  from '../config/db.js';
+import PlanSiembra from './PlanSiembra.js';
 
 export const TareaPlan = sequelize.define('TareaPlan', {
   id_tarea: {
@@ -37,6 +37,3 @@ export const TareaPlan = sequelize.define('TareaPlan', {
   ]
 });
 
-// Relación
-TareaPlan.belongsTo(PlanSiembra, { foreignKey: 'id_plan', onDelete: 'RESTRICT' }); // fk_tarea_plan
-hasMany(TareaPlan, { foreignKey: 'id_plan' });

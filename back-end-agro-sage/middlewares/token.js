@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Agricultores } from '../models/agricultores.js'; // ← corregido el import
+import { Agricultores } from '../models/index.js';
 
 // ───────────────────────────────
 // Generar token
