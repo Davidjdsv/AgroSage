@@ -3,8 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  urlLocal: "http://localhost:3306",
 };
+//urlBack: "http://172.18.0.148:8080"
 
 /*
  * For easier debugging in development mode, you can import the following file

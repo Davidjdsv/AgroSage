@@ -20,6 +20,7 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
+import { BackService } from '../../services/back-service';
 
 @Component({
   selector: 'app-login',
@@ -38,9 +39,8 @@ import {
     IonCol,
     IonCard,
     IonItem,
-    RouterLink
-,
-IonIcon,
+    RouterLink,
+    IonIcon,
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
@@ -50,14 +50,21 @@ IonIcon,
   ],
 })
 export class LoginPage implements OnInit {
-  documento!: string
-  clave!: string
+  documento!: string;
+  clave!: string;
 
-  constructor() {}
+  constructor(private backService: BackService) {}
 
   ngOnInit() {}
 
-  onLogin(){
-
+  onLogin() {
+    if (!this.documento || !this.clave) {
+      console.warn('Documento y contraseña son requeridos');
+      return;
+    }
+    this.backService.login(this.documento, this.clave).subscribe((ok) => {
+      this.backService.isLoggedIn = ok;
+      console.log('Login válido?', ok);
+    });
   }
 }
