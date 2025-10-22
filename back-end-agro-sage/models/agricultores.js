@@ -1,49 +1,54 @@
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
-import {sequelize} from './conection.js';
-import {DataTypes} from 'sequelize';
-
-export const Agricultores = sequelize.define('Agricultores', {
+export const Agricultores = sequelize.define(
+  "Agricultores",
+  {
     id_agricultor: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     nombre_completo: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(100),
+      allowNull: false,
     },
     cedula: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: true,
     },
-    telefono_contacto: {
-        type: DataTypes.STRING,
-        allowNull: false
+    telefono_movil: {
+      type: DataTypes.STRING(15),
+      allowNull: false,
     },
     direccion: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(100),
+      allowNull: false,
     },
     barrio_vereda: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(100),
+      allowNull: false,
     },
     ciudad: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     departamento: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     municipio: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     contrasena: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING(255),
+      allowNull: false,
     }
-}, {
-    tableName: 'agricultores',
-    timestamps: false
-});
+  },
+  {
+    tableName: "agricultores",
+    timestamps: false,
+  }
+);
