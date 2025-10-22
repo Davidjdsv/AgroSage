@@ -1,30 +1,60 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map, Observable, of } from 'rxjs';
-import { InterfaceCampesino } from '../models/interface-campesino';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+// Respuesta esperada del backend en /AgroSage/Agricultores/login
+export interface LoginApiResponse {
+  success: boolean;
+  msg?: string;
+  agricultor?: {
+    id_agricultor: number;
+    nombre_completo: string;
+    cedula: string;
+    ciudad?: string;
+  };
+  token?: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class BackService {
-  http = inject(HttpClient)
-  urlBack: string = environment.urlLocal;
-  isLoggedIn: boolean = false
+  private http = inject(HttpClient);
+  private apiAgricultores = ((environment as any).apiAgricultores || `${(((environment as any).apiBase) ?? environment.urlLocal)}/AgroSage/Agricultores`);
 
-  /**
-   * Realiza la verificación de credenciales contra el backend.
-   * Envía el documento y la clave y espera un booleano o un objeto { success: boolean }.
-   */
-  login(documento: string, clave: string): Observable<boolean> {
-    return this.http.get<InterfaceCampesino>(`${this.urlBack}`).pipe(
-        map((campesino) => {
-          if(campesino.documento === documento && campesino.clave === clave){
-            this.isLoggedIn = true;
-          }
-          return this.isLoggedIn;
-        })
-      );
+  isLoggedIn = false;
+  token: string | null = null;
+  currentUser: LoginApiResponse['agricultor'] | null = null;
+
+  // Login contra el backend (POST /AgroSage/Agricultores/login)
+  login(cedula: string, contrasena: string): Observable<LoginApiResponse> {
+    const body = { cedula, contrasena };
+    return this.http.post<LoginApiResponse>(`${this.apiAgricultores}/login`, body).pipe(
+      tap((resp) => {
+        if (resp?.success) {
+          this.isLoggedIn = true;
+          this.token = resp.token || null;
+          this.currentUser = resp.agricultor || null;
+        } else {
+          this.isLoggedIn = false;
+          this.token = null;
+          this.currentUser = null;
+        }
+      }),
+      catchError((err) => {
+        this.isLoggedIn = false;
+        this.token = null;
+        this.currentUser = null;
+        return throwError(() => err);
+      })
+    );
   }
 
+  // Ejemplo de consulta a ruta protegida /perfil
+  getPerfil(): Observable<any> {
+    const headers = new HttpHeaders({ 'x-token': this.token ?? '' });
+    return this.http.get(`${this.apiAgricultores}/perfil`, { headers }).pipe(
+      catchError((err) => throwError(() => err))
+    );
+  }
 }

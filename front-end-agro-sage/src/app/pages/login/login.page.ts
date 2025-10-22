@@ -50,18 +50,34 @@ import { BackService } from '../../services/back-service';
   ],
 })
 export class LoginPage implements OnInit {
-  documento!: string;
-  clave!: string;
+  documento: string = '';
+  clave: string = '';
 
   constructor(private backService: BackService, private router: Router) {}
 
   ngOnInit() {}
 
   onLogin(documento: string, clave: string) {
-    if (!this.documento || !this.clave) {
+    const cedula = documento?.trim();
+    const contrasena = clave?.trim();
+
+    if (!cedula || !contrasena) {
       console.warn('Documento y contraseña son requeridos');
       return;
     }
-    this.backService.login(documento, clave).subscribe({});
+
+    this.backService.login(cedula, contrasena).subscribe({
+      next: (resp) => {
+        if (resp?.success) {
+          console.log('Login exitoso', resp);
+          this.router.navigateByUrl('/chat-agent-weather');
+        } else {
+          console.warn('Credenciales inválidas', resp?.msg);
+        }
+      },
+      error: (err) => {
+        console.error('Error en login', err);
+      },
+    });
   }
 }

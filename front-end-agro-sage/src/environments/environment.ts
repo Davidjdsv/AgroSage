@@ -4,7 +4,12 @@
 
 export const environment = {
   production: false,
-  urlLocal: "http://172.18.0.148:8080"
+  // Base anterior usada en el proyecto (se mantiene por compatibilidad)
+  urlLocal: "http://172.18.0.148:8080",
+  // Base de la API (ajusta si tu backend corre en otro puerto/host)
+  apiBase: "http://172.18.0.148:8080",
+  // Endpoints específicos
+  apiAgricultores: "http://172.18.0.148:8080/AgroSage/Agricultores",
 };
 
 // urlLocal: "http://localhost:3306",

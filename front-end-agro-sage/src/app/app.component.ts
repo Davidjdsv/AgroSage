@@ -38,7 +38,9 @@ import {
   leafOutline,
   lockClosedOutline,
   cardOutline,
-  personCircle
+  personCircle,
+  sendOutline,
+
 } from 'ionicons/icons';
 
 @Component({
@@ -91,7 +93,8 @@ export class AppComponent {
       leafOutline,
       lockClosedOutline,
       cardOutline,
-      personCircle
+      personCircle,
+      sendOutline
     });
   }
 }
