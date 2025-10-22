@@ -13,68 +13,70 @@
         <div class="background-image"></div>
       </ion-col>
 
-      <!-- Columna derecha: formulario -->
+      <!-- Columna derecha: formulario en tarjeta -->
       <ion-col size="12" size-md="6" class="form-column">
-        <div class="form-container">
-          
-          <!-- Logo y título -->
-          <div class="header-section">
-            <ion-icon name="leaf-outline" color="success" class="logo-icon"></ion-icon>
-            <h1 class="app-title">AgroSage</h1>
-          </div>
-          
-          <p class="subtitle">La sabiduría del campo, en tus manos.</p>
+        <ion-card class="login-card">
+          <ion-card-header>
+            <ion-card-title>
+              <div class="header-section">
+                <ion-icon name="leaf-outline" color="success" class="logo-icon"></ion-icon>
+                <span class="app-title">AgroSage</span>
+              </div>
+            </ion-card-title>
+            <ion-card-subtitle class="subtitle">La sabiduría del campo, en tus manos.</ion-card-subtitle>
+          </ion-card-header>
 
-          <!-- Formulario -->
-          <form class="login-form">
-            
-            <!-- Input Documento -->
-            <ion-item lines="none" class="input-item">
-              <ion-icon name="card-outline" slot="start"></ion-icon>
-              <ion-input 
-                label="Documento" 
-                labelPlacement="stacked"
-                type="text"
-                [minlength]="8"
-                [max]="12"
-                placeholder="Ingresa tu documento"
-                [(ngModel)]="documento"
-                required
-                name="documento">
-              </ion-input>
-            </ion-item>
+          <ion-card-content>
+            <form class="login-form">
+              
+              <!-- Input Documento -->
+              <ion-item lines="none" class="input-item">
+                <ion-icon name="card-outline" slot="start"></ion-icon>
+                <ion-input 
+                  label="Documento" 
+                  labelPlacement="stacked"
+                  type="text"
+                  [minlength]="8"
+                  [maxlength]="12"
+                  placeholder="Ingresa tu documento"
+                  [(ngModel)]="documento"
+                  required
+                  name="documento">
+                </ion-input>
+              </ion-item>
 
-            <!-- Input Contraseña -->
-            <ion-item lines="none" class="input-item">
-              <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-              <ion-input 
-                label="Contraseña"
-                labelPlacement="stacked"
-                type="password" 
-                placeholder="Ingresa tu contraseña"
-                [(ngModel)]="clave"
-                required
-                name="clave">
-              </ion-input>
-            </ion-item>
+              <!-- Input Contraseña -->
+              <ion-item lines="none" class="input-item">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input 
+                  label="Contraseña"
+                  labelPlacement="stacked"
+                  type="password" 
+                  placeholder="Ingresa tu contraseña"
+                  [(ngModel)]="clave"
+                  required
+                  name="clave">
+                </ion-input>
+              </ion-item>
 
-            <!-- Botón de login -->
-            <ion-button 
-              expand="block" 
-              color="success" 
-              class="login-button"
-              (click)="onLogin()">
-              Iniciar Sesión
-            </ion-button>
+              <!-- Botón de login -->
+              <ion-button 
+                expand="block" 
+                color="success" 
+                class="login-button"
+                (click)="onLogin()">
+                Iniciar Sesión
+              </ion-button>
 
-            <!-- Link de registro -->
-            <p class="register-text">
-              ¿No tienes cuenta? 
-              <a [routerLink]="'/login'" class="register-link">Regístrate</a>
-            </p>
+              <!-- Link de registro -->
+              <p class="register-text">
+                ¿No tienes cuenta? 
+                <a [routerLink]="'/login'" class="register-link">Regístrate</a>
+              </p>
 
-          </form>
-        </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
 
     </ion-row>
