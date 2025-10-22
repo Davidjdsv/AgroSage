@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { loginGuard } from './guards/login-guard';
 
 export const routes: Routes = [
   {
@@ -8,12 +9,11 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./pages/login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'chat-agent-weather',
-    loadComponent: () => import('./pages/chat-agent-weather/chat-agent-weather.page').then( m => m.ChatAgentWeatherPage)
+    canActivate: [loginGuard],
+    loadComponent: () => import('./pages/chat-agent-weather/chat-agent-weather.page').then((m) => m.ChatAgentWeatherPage),
   },
-
-
 ];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -53,7 +53,7 @@ export class LoginPage implements OnInit {
   documento!: string;
   clave!: string;
 
-  constructor(private backService: BackService) {}
+  constructor(private backService: BackService, private router: Router) {}
 
   ngOnInit() {}
 
@@ -64,6 +64,9 @@ export class LoginPage implements OnInit {
     }
     this.backService.login(this.documento, this.clave).subscribe((ok) => {
       this.backService.isLoggedIn = ok;
+      if (ok) {
+        this.router.navigateByUrl('/chat-agent-weather');
+      }
       console.log('Login válido?', ok);
     });
   }
