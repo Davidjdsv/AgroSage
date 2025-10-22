@@ -7,8 +7,8 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'folder/:id',
-    loadComponent: () =>
-      import('./folder/folder.page').then((m) => m.FolderPage),
+    path: 'chat-agent-weather',
+    loadComponent: () => import('./pages/chat-agent-weather/chat-agent-weather.page').then( m => m.ChatAgentWeatherPage)
   },
+
 ];

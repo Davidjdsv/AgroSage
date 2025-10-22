@@ -33,6 +33,8 @@ import {
   bookmarkSharp,
   homeOutline,
   homeSharp,
+  chatbubbleEllipsesOutline,
+  chatbubbleEllipsesSharp,
 } from 'ionicons/icons';
 
 @Component({
@@ -58,7 +60,9 @@ import {
   ],
 })
 export class AppComponent {
-  public appPages = [{ title: 'Inicio', url: '/folder/inbox', icon: 'home' }];
+  public appPages = [
+    { title: 'Chat con GaIA 🍃', url: '/chat-agent-weather', icon: 'chatbubble-ellipses' },
+  ];
   constructor() {
     addIcons({
       mailOutline,
@@ -77,6 +81,8 @@ export class AppComponent {
       bookmarkSharp,
       homeOutline,
       homeSharp,
+      chatbubbleEllipsesOutline,
+      chatbubbleEllipsesSharp,
     });
   }
 }
