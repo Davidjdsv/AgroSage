@@ -1,14 +1,13 @@
 import { DataTypes } from 'sequelize';
-import sequelize  from '../config/db.js';
+import sequelize from '../config/db.js';
 import PlanSiembra from './PlanSiembra.js';
 
-export const TareaPlan = sequelize.define('TareaPlan', {
+const TareaPlan = sequelize.define('TareaPlan', {
   id_tarea: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  // id_plan (FK)
   etapa: {
     type: DataTypes.STRING(60),
     allowNull: false,
@@ -37,3 +36,4 @@ export const TareaPlan = sequelize.define('TareaPlan', {
   ]
 });
 
+export default TareaPlan;

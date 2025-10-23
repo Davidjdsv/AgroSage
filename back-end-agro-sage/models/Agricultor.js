@@ -1,54 +1,19 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-export const Agricultor = sequelize.define(
-  "Agricultor",
-  {
-    id_agricultor: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    nombre_completo: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    cedula: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      unique: true,
-    },
-    telefono_movil: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-    },
-    direccion: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    barrio_vereda: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    ciudad: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    departamento: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    municipio: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    contrasena: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    }
-  },
-  {
-    tableName: "agricultores",
-    timestamps: false,
-  }
-);
+const Agricultor = sequelize.define("Agricultor", {
+  id_agricultor: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  nombre_completo: DataTypes.STRING(150),
+  cedula: DataTypes.STRING(12),
+  telefono_movil: DataTypes.STRING(25),
+  direccion: DataTypes.STRING(120),
+  barrio_vereda: DataTypes.STRING(80),
+  departamento: DataTypes.STRING(80),
+  municipio: DataTypes.STRING(30),
+  contrasena: DataTypes.STRING(30),
+}, {
+  tableName: "agricultores",
+  timestamps: false,
+});
+
+export default Agricultor;

@@ -34,7 +34,6 @@ CREATE TABLE `agricultores` (
   `telefono_movil` varchar(25) NOT NULL,
   `direccion` varchar(120) NOT NULL,
   `barrio_vereda` varchar(80) NOT NULL,
-  `ciudad` varchar(80) NOT NULL,
   `departamento` varchar(80) NOT NULL,
   `municipio` varchar(30) NOT NULL,
   `contrasena` varchar(30) NOT NULL

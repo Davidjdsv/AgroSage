@@ -1,29 +1,19 @@
-import {sequelize} from './conection.js';
-import {DataTypes} from 'sequelize';
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Parcela from "./Parcela.js";
 
-export const alertas = sequelize.define('Alertas', {
-    id_alertas: {
-        type: DataTypes.STRING,
-        primaryKey: true
-    },
-    id_parcelas: {
-        type: DataTypes.STRING,
-        primaryKey: true
-    },
-    riesgo: {
-        type: DataTypes.STRING,
-        primaryKey: true
-    },
-    Severidad: {
-        type: DataTypes.STRING,
-        primaryKey: true
-    },
-    fecha: {
-        type: DataTypes.DATE,
-        primaryKey: true
-    },
-    
+const Alerta = sequelize.define("Alerta", {
+  id_alerta: { type: DataTypes.STRING(36), primaryKey: true },
+  id_parcela: DataTypes.INTEGER,
+  riesgo: DataTypes.STRING(30),
+  severidad: DataTypes.STRING(10),
+  fecha_alerta: DataTypes.DATE,
+  mensaje: DataTypes.STRING(250),
 }, {
-    tableName: 'agricultores',
-    timestamps: false
+  tableName: "alertas",
+  timestamps: false,
 });
+
+Alerta.belongsTo(Parcela, { foreignKey: "id_parcela", as: "parcela" });
+
+export default Alerta;
