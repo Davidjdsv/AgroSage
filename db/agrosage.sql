@@ -36,7 +36,7 @@ CREATE TABLE `agricultores` (
   `barrio_vereda` varchar(80) NOT NULL,
   `departamento` varchar(80) NOT NULL,
   `municipio` varchar(30) NOT NULL,
-  `contrasena` varchar(30) NOT NULL
+  `contrasena` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -254,8 +254,8 @@ CREATE TABLE `tareas_plan` (
 --
 ALTER TABLE `agricultores`
   ADD PRIMARY KEY (`id_agricultor`),
-  ADD UNIQUE KEY `cedula` (`cedula`),
-  ADD KEY `idx_agricultores_ciudad` (`ciudad`);
+  ADD UNIQUE KEY `cedula` (`cedula`);
+-- NOTA: Se ha eliminado el índice `idx_agricultores_ciudad` según tu solicitud.
 
 --
 -- Indices de la tabla `alertas`
@@ -355,6 +355,47 @@ ALTER TABLE `suelos_catalogo`
 ALTER TABLE `tareas_plan`
   ADD PRIMARY KEY (`id_tarea`),
   ADD KEY `idx_tareas_plan` (`id_plan`,`etapa`);
+
+--
+-- AUTO_INCREMENT para las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `agricultores`
+--
+ALTER TABLE `agricultores`
+  MODIFY `id_agricultor` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `canales_comercializacion`
+--
+ALTER TABLE `canales_comercializacion`
+  MODIFY `id_canal` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `cultivos_catalogo`
+--
+ALTER TABLE `cultivos_catalogo`
+  MODIFY `id_cultivo` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `insumos_catalogo`
+--
+ALTER TABLE `insumos_catalogo`
+  MODIFY `id_insumo` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `parcelas`
+--
+ALTER TABLE `parcelas`
+  MODIFY `id_parcela` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `suelos_catalogo`
+--
+ALTER TABLE `suelos_catalogo`
+  MODIFY `id_suelo` int(11) NOT NULL AUTO_INCREMENT;
+
 
 --
 -- Restricciones para tablas volcadas
