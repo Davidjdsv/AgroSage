@@ -1,0 +1,101 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary-success">
+    <!-- El botón de menú es esencial para Split Pane/Mobile -->
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="flex items-center">
+        <!-- Ícono del chat -->
+        <ion-icon name="chatbubble-ellipses-outline" class="mr-2"></ion-icon>
+        <span class="font-bold">Asistente GaIA</span> 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="chat-content">
+
+  <!-- Contenedor de Chat Principal -->
+  <!-- MEJORA: Añadimos un padding inferior grande (pb-24) para que el último mensaje sea visible sobre el footer/input -->
+  <div class="chat-container pt-4 pb-24 h-full bg-gray-50">
+
+    <!-- Contenedor de Mensajes con Scroll. Usamos la referencia local #messagesContainer -->
+    <div class="messages flex flex-col px-4 h-full overflow-y-auto" #messagesContainer>
+      
+      <!-- Loop de Mensajes usando @for y Signals -->
+      @for (msg of messages(); track $index) {
+        <div 
+          class="message-row flex mb-3" 
+          [ngClass]="{ 
+            'justify-end': msg.sender === 'user', 
+            'justify-start': msg.sender === 'agent' 
+          }"
+        >
+          <div 
+            class="message-bubble p-3 max-w-[85%] md:max-w-[60%] transition-transform duration-300 transform hover:scale-[1.01]"
+            [ngClass]="{
+              'bg-primary-success text-white rounded-t-xl rounded-bl-xl rounded-br-md shadow-md': msg.sender === 'user',
+              'bg-gray-50 text-gray-800 rounded-t-xl rounded-br-xl rounded-bl-md shadow-lg border border-gray-200 flex items-start space-x-2': msg.sender === 'agent'
+            }"
+          >
+            <!-- Ícono de Agente (Solo visible en mensajes de GaIA) -->
+            @if (msg.sender === 'agent') {
+              <ion-icon name="leaf-sharp" class="text-lg text-primary-success mt-1 flex-shrink-0"></ion-icon>
+            }
+
+            <div class="flex flex-col">
+              <!-- Texto del mensaje -->
+              <!-- whitespace-pre-wrap permite mostrar saltos de línea (\n) -->
+              <p class="whitespace-pre-wrap text-sm md:text-base">{{ msg.text }}</p>
+              
+              <!-- Timestamp -->
+              <small 
+                class="timestamp block mt-1 text-right text-[0.65rem] pt-1"
+                [ngClass]="{ 
+                  'text-white opacity-90': msg.sender === 'user',
+                  'text-gray-500 opacity-90': msg.sender === 'agent'
+                }"
+              >
+                {{ msg.timestamp | date: 'shortTime' }}
+              </small>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Indicador de carga. Accedemos a la Signal 'isLoading' como una función: isLoading() -->
+      @if (isLoading()) {
+        <div class="message-row flex mb-3 justify-start">
+            <div class="message-bubble p-3 rounded-t-xl rounded-br-xl rounded-bl-md shadow-md flex items-center space-x-2 bg-gray-200 text-gray-700">
+              <ion-spinner name="dots" class="mr-2" color="primary-success"></ion-spinner>
+              <p class="text-sm">GaIA está escribiendo...</p>
+            </div>
+        </div>
+      }
+    </div>
+    
+  </div>
+</ion-content>
+
+<!-- Área de Input (Pie de Página) -->
+<ion-footer class="shadow-2xl border-t-2 border-primary-success/20">
+  <div class="input-area flex p-4 bg-white items-center">
+    <!-- Input de Mensaje Principal -->
+    <input 
+      class="flex-grow p-4 border border-gray-300 rounded-full focus:outline-none focus:ring-4 focus:ring-primary-success/50 transition duration-300 text-base shadow-inner h-14"
+      [(ngModel)]="userInput" 
+      (keyup.enter)="sendMessage()" 
+      placeholder="Escribe tu consulta agrícola o comando..."
+      [disabled]="isLoading()"
+    />
+    
+    <!-- Botón de Enviar -->
+    <ion-button 
+      shape="round" 
+      color="primary-success"
+      class="ml-3 w-14 h-14 transition-all duration-300 transform hover:scale-105"
+      (click)="sendMessage()" 
+      [disabled]="!userInput.trim() || isLoading()">
+      <ion-icon slot="icon-only" name="send-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-footer>

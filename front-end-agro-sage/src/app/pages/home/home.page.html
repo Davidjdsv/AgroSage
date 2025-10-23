@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inicio | AgroSage 🍃</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div id="container">
+    <ion-label>
+      <h1 class="ion-text-wrap welcome-title">¡Hola!</h1>
+      <p class="ion-text-wrap welcome-subtitle">
+        La sabiduría del campo, en tus manos. Optimiza tus cultivos y planea tu próxima siembra.
+      </p>
+    </ion-label>
+  </div>
+
+  <ion-card class="status-card" [ngClass]="{'pending': !isParcelaRegistered, 'active': hasActivePlan}">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon 
+          slot="start" 
+          [name]="isParcelaRegistered && hasActivePlan ? 'checkmark-circle-outline' : 'alert-circle-outline'"
+          [color]="isParcelaRegistered && hasActivePlan ? 'success' : 'warning'">
+        </ion-icon>
+        Estado del Ciclo Productivo
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      @if (!isParcelaRegistered) {
+        <p>🚨 **Pendiente:** Necesitas registrar los datos de tu parcela (suelo y ubicación) para recibir recomendaciones personalizadas.</p>
+        <ion-button expand="block" color="warning" (click)="router.navigateByUrl('/parcela-registro')">
+          Registrar Parcela Ahora
+        </ion-button>
+      }
+      @else if (isParcelaRegistered && !hasActivePlan) {
+        <p>✅ Parcela registrada. Estás listo para solicitar tu primera recomendación personalizada.</p>
+        <ion-button expand="block" color="success" (click)="startRecommendation()">
+          Generar Plan de Siembra
+        </ion-button>
+      }
+      @else {
+        <p>🌱 **¡Plan Activo!** Estás siguiendo una ruta productiva para *Maíz*. Revisa tu calendario para las tareas de la semana.</p>
+        <ion-button expand="block" color="primary" (click)="viewCalendar()">
+          Ver Tareas en Calendario
+        </ion-button>
+      }
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list-header>Acciones Rápidas</ion-list-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card button detail="false" class="action-card" (click)="startRecommendation()">
+          <ion-icon name="leaf-sharp" color="success"></ion-icon>
+          <ion-card-title>Recomendación de Cultivo</ion-card-title>
+          <p>Obtén una ruta clara y rentable.</p>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="6">
+        <ion-card button detail="false" class="action-card" (click)="viewCalendar()">
+          <ion-icon name="calendar-sharp" color="secondary"></ion-icon>
+          <ion-card-title>Tareas del Plan</ion-card-title>
+          <p>Sincroniza tus actividades.</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card button detail="false" class="action-card" (click)="goToGaIA()">
+          <ion-icon name="chatbubble-ellipses-sharp" color="tertiary"></ion-icon>
+          <ion-card-title>Asistente GaIA</ion-card-title>
+          <p>Preguntas sobre clima o proceso.</p>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="6">
+        <ion-card button detail="false" class="action-card" (click)="router.navigateByUrl('/comercializacion')">
+          <ion-icon name="bar-chart-sharp" color="danger"></ion-icon>
+          <ion-card-title>Mercados y Compradores</ion-card-title>
+          <p>Busca compradores cerca de tu localidad.</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

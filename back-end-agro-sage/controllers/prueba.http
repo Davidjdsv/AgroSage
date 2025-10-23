@@ -1,0 +1,38 @@
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "cedula": "54321",
+    "contrasena": "1234"
+}
+
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "nombre": "Juan Perez",
+    "cedula": "54321",
+    "telefono_movil": "555-5678",
+    "direccion": "Calle Falsa 123",
+    "barrio_vereda": "Centro",
+    "departamento": "Departamento Ejemplo",
+    "municipio": "Municipio Ejemplo",
+    "contrasena": "1234"    
+}
+
+POST http://localhost:5000/api/chat/ask
+Content-Type: application/json
+
+{
+    "question": "¿Cuál es la mejor época para sembrar maíz en Colombia?"
+}
+
+POST http://localhost:5000/api/plan/generate-plan
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+  "cultivo": "Maíz",
+  "area": 2.5,
+  "fechaSiembra": "2025-11-01"
+}

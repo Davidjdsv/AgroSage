@@ -1,22 +1,23 @@
+// controllers/planController.js
 import { PlanSiembra, Parcela } from "../models/index.js";
-import { invokeGemini } from "../services/geminiService.js"; // función que usa la API de Gemini
+import { invokeBedrock } from "../services/bedrockService.js";
+
+const MODEL_ID = "anthropic.claude-v1"; // Cambia por el modelo que quieras usar en Bedrock
 
 export const generatePlan = async (req, res) => {
   try {
     const { cultivo, area, fechaSiembra } = req.body;
-    const id_agricultor = req.user.id_agricultor; // viene del JWT
+    const id_agricultor = req.user.id_agricultor;
 
     if (!cultivo || !area || !fechaSiembra) {
       return res.status(400).json({ error: "Faltan datos requeridos" });
     }
 
-    // Buscar parcela asociada al agricultor
     const parcela = await Parcela.findOne({ where: { id_agricultor } });
     if (!parcela) {
       return res.status(404).json({ error: "No se encontró una parcela asociada al agricultor" });
     }
 
-    // Crear el registro base en la BD
     const nuevoPlan = await PlanSiembra.create({
       id_parcela: parcela.id_parcela,
       cultivo,
@@ -25,7 +26,6 @@ export const generatePlan = async (req, res) => {
       estado: "Generando plan con IA..."
     });
 
-    // 🧠 Consultar Gemini para generar el plan inteligente
     const prompt = `
 Eres un asistente agrícola experto. 
 Genera un plan de siembra para el cultivo de ${cultivo}, en un área de ${area} hectáreas, 
@@ -37,12 +37,11 @@ Incluye:
 4. Formato JSON estructurado con campos: tareas, recomendaciones y calendario.
 `;
 
-    const planIA = await invokeGemini(prompt);
+    const planIA = await invokeBedrock(prompt, MODEL_ID);
 
-    // Actualizar plan con el contenido generado por la IA
     await nuevoPlan.update({
       estado: "Plan generado",
-      detalles: planIA // guarda el JSON de Gemini
+      detalles: planIA
     });
 
     res.json({
@@ -50,6 +49,7 @@ Incluye:
       plan: nuevoPlan,
       planIA
     });
+
   } catch (error) {
     console.error("Error al generar plan:", error);
     res.status(500).json({

@@ -1,119 +1,106 @@
+/* Estilos generales del menú */
 ion-menu ion-content {
-  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+    --background: #f7fcf7; // Fondo muy claro y ligeramente verde
 }
 
-ion-menu.md ion-content {
-  --padding-start: 8px;
-  --padding-end: 8px;
-  --padding-top: 20px;
-  --padding-bottom: 20px;
+/* Estilo para el encabezado visual */
+.menu-header {
+    background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Gradiente de verde vibrante */
+    padding: 20px 0;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .header-logo {
+        text-align: center;
+        color: white;
+        margin-bottom: 15px;
+
+        ion-icon {
+            font-size: 3em;
+        }
+        h1 {
+            font-family: 'Georgia', serif; /* Tipo de letra más orgánico o fuerte */
+            font-weight: 700;
+            margin: 5px 0 0;
+        }
+        ion-note {
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+        }
+    }
 }
 
-ion-menu.md ion-list {
-  padding: 20px 0;
+/* Estilo para el perfil de usuario */
+.user-profile {
+    --background: transparent;
+    --border-color: transparent;
+    color: white;
+    padding: 0 16px; 
+
+    ion-avatar {
+        width: 50px;
+        height: 50px;
+        border: 2px solid white; /* Borde blanco para resaltar */
+    }
+    h2 {
+        font-weight: 600;
+        margin: 0;
+    }
+    p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.8em;
+    }
 }
 
-ion-menu.md ion-note {
-  margin-bottom: 30px;
+/* Estilo de los items de la lista */
+ion-item {
+    --padding-start: 18px; 
+    --inner-padding-end: 18px;
+    --min-height: 48px;
+    color: #444; /* Texto más oscuro */
+    transition: all 0.2s ease-in-out;
+
+    ion-icon {
+        color: #7CB342; /* Color de icono verde más suave */
+        font-size: 20px;
+    }
+
+    ion-label {
+        font-weight: 500;
+        font-size: 0.95em;
+    }
 }
 
-ion-menu.md ion-list-header,
-ion-menu.md ion-note {
-  padding-left: 10px;
-}
-
-ion-menu.md ion-list#inbox-list {
-  border-bottom: 1px solid var(--ion-background-color-step-150, #d7d8da);
-}
-
-ion-menu.md ion-list#inbox-list ion-list-header {
-  font-size: 22px;
-  font-weight: 600;
-
-  min-height: 20px;
-}
-
-ion-menu.md ion-list#labels-list ion-list-header {
-  font-size: 16px;
-
-  margin-bottom: 18px;
-
-  color: #757575;
-
-  min-height: 26px;
-}
-
-ion-menu.md ion-item {
-  --padding-start: 10px;
-  --padding-end: 10px;
-  border-radius: 4px;
-}
-
-ion-menu.md ion-item.selected {
-  --background: rgba(var(--ion-color-success-rgb), 0.14);
-}
-
-ion-menu.md ion-item.selected ion-icon {
-  color: var(--ion-color-success);
-}
-
-ion-menu.md ion-item ion-icon {
-  color: #616e7e;
-}
-
-ion-menu.md ion-item ion-label {
-  font-weight: 500;
-}
-
-ion-menu.ios ion-content {
-  --padding-bottom: 20px;
-}
-
-ion-menu.ios ion-list {
-  padding: 20px 0 0 0;
-}
-
-ion-menu.ios ion-note {
-  line-height: 24px;
-  margin-bottom: 20px;
-}
-
-ion-menu.ios ion-item {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 50px;
-}
-
-ion-menu.ios ion-item.selected ion-icon {
-  color: var(--ion-color-success);
-}
-
-ion-menu.ios ion-item ion-icon {
-  font-size: 24px;
-  color: #73849a;
-}
-
-ion-menu.ios ion-list#labels-list ion-list-header {
-  margin-bottom: 8px;
-}
-
-ion-menu.ios ion-list-header,
-ion-menu.ios ion-note {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-ion-menu.ios ion-note {
-  margin-bottom: 8px;
-}
-
-ion-note {
-  display: inline-block;
-  font-size: 16px;
-
-  color: var(--ion-color-medium-shade);
-}
-
+/* Estilo del item seleccionado */
 ion-item.selected {
-  --color: var(--ion-color-success);
+    --background: rgba(124, 179, 66, 0.15); /* Fondo suave en verde */
+    color: #4CAF50; /* Texto principal en verde fuerte */
+    border-left: 5px solid #4CAF50; /* Barra lateral para indicar activo */
+    
+    ion-icon {
+        color: #4CAF50; /* Icono en verde fuerte */
+    }
+}
+
+/* Encabezados de lista */
+ion-list-header {
+    font-weight: 700;
+    font-size: 1em;
+    padding-top: 20px;
+    color: #388E3C; /* Verde oscuro para las secciones */
+    padding-left: 18px;
+}
+
+/* Pie de menú */
+.menu-footer {
+    padding: 16px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+
+    ion-note, p {
+        color: #9E9E9E;
+        font-size: 0.8em;
+        margin: 4px 0;
+    }
 }

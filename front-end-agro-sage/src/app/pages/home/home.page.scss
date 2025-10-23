@@ -1,0 +1,90 @@
+/* Estilos proporcionados previamente para la vista de dashboard */
+#container {
+  text-align: left;
+  padding-top: 20px;
+}
+
+.welcome-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #388E3C; /* Un verde oscuro */
+  margin-bottom: 5px;
+}
+
+.welcome-subtitle {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* === Tarjeta de Estado === */
+.status-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.status-card.pending {
+  border-left: 5px solid var(--ion-color-warning);
+}
+
+.status-card.active {
+  border-left: 5px solid var(--ion-color-success);
+}
+
+.status-card ion-card-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  font-weight: 600;
+  
+  ion-icon {
+    margin-right: 8px;
+  }
+}
+
+.status-card ion-card-content p {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+/* === Acciones Rápidas === */
+ion-list-header {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #388E3C;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.action-card {
+  --background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  padding: 15px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  height: 100%;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  ion-icon {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+  }
+
+  ion-card-title {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin: 5px 0 3px;
+    color: #333;
+  }
+  
+  p {
+      font-size: 0.75em;
+      color: #777;
+  }
+}

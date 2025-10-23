@@ -1,12 +1,19 @@
 <ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+  <ion-split-pane contentId="main-content" [when]="getMenuCondition()">
+    <ion-menu contentId="main-content" type="overlay" [disabled]="isLoginPage">
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>AgroSage 🍃</ion-list-header>
-          <ion-note>- Sena-soft 2025 -</ion-note>
-
-          @for (p of appPages; track p; let i = $index) {
+        
+        <div class="menu-header">
+          <div class="header-logo">
+            <ion-icon name="leaf-sharp" size="large"></ion-icon>
+            <h1>AgroSage</h1>
+            <ion-note>- Sena-soft 2025 -</ion-note>
+          </div>
+          
+        </div>
+        
+        <ion-list id="main-sections">
+          @for (p of appPages.main; track p; let i = $index) {
             <ion-menu-toggle auto-hide="false">
               <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
                 <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
@@ -15,6 +22,22 @@
             </ion-menu-toggle>
           }
         </ion-list>
+
+        <ion-list id="utility-sections">
+          <ion-list-header>Soporte y Utilidades</ion-list-header>
+          @for (p of appPages.utility; track p; let i = $index) {
+            <ion-menu-toggle auto-hide="false">
+              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          }
+        </ion-list>
+        
+        <div class="menu-footer">
+          <ion-note>Versión 1.0.2</ion-note>
+        </div>
 
       </ion-content>
     </ion-menu>
