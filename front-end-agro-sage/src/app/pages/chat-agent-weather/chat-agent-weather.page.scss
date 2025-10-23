@@ -1,0 +1,106 @@
+/* Estilos para chat tipo WhatsApp */
+
+.chat-content {
+  --background: var(--ion-color-light);
+}
+
+.chat-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+ion-item.message-item {
+  --inner-padding-start: 8px;
+  --inner-padding-end: 8px;
+  --min-height: auto;
+  align-items: flex-end;
+}
+
+ion-item.message-item.me {
+  justify-content: flex-end;
+}
+
+ion-item.message-item.ai {
+  justify-content: flex-start;
+}
+
+.bubble {
+  display: inline-block;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: var(--ion-color-light);
+  color: var(--ion-color-dark);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+ion-item.message-item.me .bubble {
+  background: var(--ion-color-success);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  margin-left: auto;
+}
+
+ion-item.message-item.ai .bubble {
+  background: var(--ion-color-light-shade);
+  color: var(--ion-color-dark);
+  border-bottom-left-radius: 6px;
+  margin-right: auto;
+}
+
+.bubble .time {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  text-align: right;
+}
+
+ion-avatar {
+  background: transparent;
+}
+
+ion-avatar ion-icon {
+  font-size: 24px;
+  color: var(--ion-color-success);
+}
+
+ion-item.message-item.me ion-avatar ion-icon {
+  color: var(--ion-color-medium);
+}
+
+/* Composer inferior */
+.composer-footer ion-item {
+  --inner-padding-start: 12px;
+  --inner-padding-end: 12px;
+}
+
+.composer-footer ion-input {
+  background: var(--ion-color-light);
+  border-radius: 22px;
+  padding: 8px 12px;
+}
+
+.composer-footer ion-button {
+  margin-left: 8px;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .chat-content {
+    --background: var(--ion-color-dark);
+  }
+  .bubble {
+    background: var(--ion-color-medium);
+    color: #fff;
+  }
+  ion-item.message-item.ai .bubble {
+    background: var(--ion-color-medium);
+  }
+  .composer-footer ion-input {
+    background: var(--ion-color-medium);
+    color: #fff;
+  }
+}

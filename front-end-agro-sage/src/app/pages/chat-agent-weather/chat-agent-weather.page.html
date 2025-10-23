@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="success">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chat con GaIA 🍃</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="chat-content">
+  <ion-header collapse="condense">
+    <ion-toolbar color="success">
+      <ion-buttons slot="start">
+        <ion-menu-button autoHide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title size="large">Chat con GaIA 🍃</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Lista de mensajes -->
++  <ion-item lines="none" *ngIf="isFetching">
++    <ion-label><ion-note color="medium">Consultando clima...</ion-note></ion-label>
++  </ion-item>
+  <ion-list class="chat-list">
+    <ng-container *ngFor="let msg of messages">
+      <ion-item lines="none" class="message-item" [class.me]="msg.from === 'user'" [class.ai]="msg.from === 'ai'">
+        <ion-avatar slot="start" *ngIf="msg.from === 'ai'">
+          <ion-icon name="leaf-outline"></ion-icon>
+        </ion-avatar>
+        <ion-avatar slot="end" *ngIf="msg.from === 'user'">
+          <ion-icon name="person-circle"></ion-icon>
+        </ion-avatar>
+        <ion-label class="bubble">
+          <div class="text">{{ msg.text }}</div>
+          <ion-note class="time">{{ msg.time }}</ion-note>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>
+
+<!-- Composer inferior -->
+<ion-footer class="composer-footer">
+  <ion-toolbar>
+    <ion-item lines="none">
+      <ion-input
+        type="text"
+        placeholder="Escribe un mensaje..."
+        [(ngModel)]="newMessage"
+        clearInput="true"
+        enterkeyhint="send"
+        (keyup.enter)="sendMessage()"
+      ></ion-input>
+
+      <ion-buttons slot="end">
+        <ion-button color="success" shape="round" (click)="sendMessage()" [disabled]="!newMessage">
+          <ion-icon name="send-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
